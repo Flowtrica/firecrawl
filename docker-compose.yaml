@@ -44,7 +44,8 @@ services:
         max-size: "10m"
         max-file: "3"
         compress: "true"
- postgres:
+
+  postgres:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
@@ -94,6 +95,6 @@ services:
       - "traefik.http.routers.firecrawl.tls=true"
       - "traefik.http.middlewares.firecrawl-auth.headers.customrequestheaders.X-API-Key=${FIRECRAWL_API_KEY}"
       - "traefik.http.routers.firecrawl.middlewares=firecrawl-auth"
-  
-  volumes:
-    postgres_data:
+
+volumes:
+  postgres_data:
