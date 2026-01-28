@@ -30,6 +30,21 @@ services:
     tmpfs:
       - /tmp/.cache:noexec,nosuid,size=1g
 
+  searxng:
+    image: searxng/searxng
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
   api:
     build: apps/api
     environment:
@@ -42,10 +57,17 @@ services:
       NUM_WORKERS_PER_QUEUE: ${NUM_WORKERS_PER_QUEUE:-8}
       CRAWL_CONCURRENT_REQUESTS: ${CRAWL_CONCURRENT_REQUESTS:-10}
       BROWSER_POOL_SIZE: ${BROWSER_POOL_SIZE:-5}
+
+      # SearXNG integration
+      SEARXNG_ENDPOINT: http://searxng:8080
+      SEARXNG_ENGINES: google,bing,youtube
+      SEARXNG_CATEGORIES: general,images,videos
     depends_on:
       redis:
         condition: service_started
       playwright-service:
+        condition: service_started
+      searxng:
         condition: service_started
     ports:
       - "${PORT:-3222}:${INTERNAL_PORT:-3222}"
