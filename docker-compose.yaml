@@ -81,8 +81,8 @@ services:
 
     # Traefik labels for subdomain + API‑key header
     labels:
-      - "traefik.http.routers.firecrawl.rule=Host(`firecrawlapi.shapp.uk`)"
+      - "traefik.http.routers.firecrawl.rule=Host(`${FIRECRAWL_HOST}`)"
       - "traefik.http.routers.firecrawl.entrypoints=websecure"
       - "traefik.http.routers.firecrawl.tls=true"
-      - "traefik.http.middlewares.firecrawl-auth.headers.customrequestheaders.X-API-Key=fc-selfhosted-12345"
+      - "traefik.http.middlewares.firecrawl-auth.headers.customrequestheaders.X-API-Key=${FIRECRAWL_API_KEY}"
       - "traefik.http.routers.firecrawl.middlewares=firecrawl-auth"
